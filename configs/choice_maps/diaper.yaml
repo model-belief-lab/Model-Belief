@@ -1,0 +1,53 @@
+version: 1
+name: diapers_v1
+description: "Diaper brand choice set token map for belief extraction."
+
+choice_set:
+  id: diapers
+  alternatives:
+    - id: pampers
+      label: "Pampers"
+      target_tokens: ["P", "Pamp", "Pam"]
+
+    - id: huggies
+      label: "Huggies"
+      target_tokens: ["H"]
+
+    - id: luvs
+      label: "Luvs"
+      target_tokens: ["L"]
+
+    - id: none
+      label: "None"
+      target_tokens: ["None", "none", "Neither", "neither"]
+
+token_policy:
+  # Matching behavior against API token strings
+  case_sensitive: true
+
+  # If true, the loader automatically adds leading-space variants.
+  allow_leading_space_variant: true
+
+pivot:
+  # choose one of: first_token_available | llm_judge | custom
+  active: llm_judge
+
+  # searching for the pivot index in the logprobs token list, return the first matching token
+  # within the target tokens of any alternative.
+  first_token_available:
+    # Only consider the patterns after these anchors in the text
+    # If not matched or empty list, consider the whole text.
+    anchors: ["Answer:", "Final answer:"]
+    # If multiple anchors are found, which one to use
+    anchor_policy: last      # {first | last}
+
+  llm_judge:
+    # Use an LLM to pick the pivot index.
+    # Model/temperature/max_tokens are configured in configs/models.yaml (openai.pivot_judge).
+    place_holder: true   # Unused, for documentation only.
+
+  custom:
+    # Custom pivot-finding function
+    # Dotted path to a callable:
+    # (text, logprobs_content, context) -> pivot_index (int)
+    function: "my_project.my_pivot:find_pivot"

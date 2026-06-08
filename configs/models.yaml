@@ -1,0 +1,27 @@
+provider: openai
+
+openai:
+  # Read from env by default (do not commit secrets)
+  api_key_env: OPENAI_API_KEY
+
+  # Main generation call used to produce the response with logprobs
+  response:
+    model: gpt-5.2-2025-12-11
+    temperature: 1.0
+    max_completion_tokens: 128
+
+    # Required for model-belief extraction
+    logprobs: true
+    top_logprobs: 5
+
+    # Any additional parameters placed here will be forwarded to the OpenAI Responses API.
+    passthrough:
+      service_tier: "flex"
+
+
+  # Secondary call used ONLY when pivot.active = llm_judge
+  # Keeping it here prevents duplicating judge params across many choice maps.
+  pivot_judge:
+    model: gpt-5-mini-2025-08-07
+    max_completion_tokens: 64
+    temperature: 0.0

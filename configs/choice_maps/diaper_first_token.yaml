@@ -1,0 +1,32 @@
+version: 1
+name: diapers_v1_first_token
+description: "Diaper brand choice set token map for belief extraction (first-token pivot)."
+
+choice_set:
+  id: diapers
+  alternatives:
+    - id: pampers
+      label: "Pampers"
+      target_tokens: ["P", "Pamp", "Pam"]
+
+    - id: huggies
+      label: "Huggies"
+      target_tokens: ["H"]
+
+    - id: luvs
+      label: "Luvs"
+      target_tokens: ["L"]
+
+    - id: none
+      label: "None"
+      target_tokens: ["None", "none", "Neither", "neither"]
+
+token_policy:
+  case_sensitive: true
+  allow_leading_space_variant: true
+
+pivot:
+  active: first_token_available
+  first_token_available:
+    anchors: ["Answer:", "Final answer:"]
+    anchor_policy: last
